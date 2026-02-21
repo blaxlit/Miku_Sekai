@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template  # <--- จุดที่ต้องแก้ครับ
 from models import db
 from dotenv import load_dotenv
 import os
@@ -11,18 +11,17 @@ app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///miku_sekai.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# เชื่อมต่อฐานข้อมูลกับแอปพลิเคชัน
+# เชื่อมต่อฐานข้อมูล
 db.init_app(app)
 
-# สร้างไฟล์ฐานข้อมูลอัตโนมัติ
 with app.app_context():
     db.create_all()
 
-# --- Routes (หน้าเว็บต่างๆ) ---
+# --- Routes ---
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to Miku Sekai! 🎵</h1><p>โลกของคนรัก Hatsune Miku</p>"
+    return render_template('index.html') # <--- บรรทัดนี้จะทำงานได้แล้วครับ
 
 if __name__ == '__main__':
     app.run(debug=True)
