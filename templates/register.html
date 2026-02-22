@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="flex justify-center items-center mt-10">
+    <div class="card w-96 bg-white shadow-xl rounded-box">
+        <div class="card-body text-center">
+            <h2 class="text-3xl font-bold text-teal-500 mb-4">สมัครสมาชิก</h2>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-control w-full mb-4">
+                    <label class="label"><span class="label-text text-gray-700">{{ form.username.label }}</span></label>
+                    {{ form.username(class="input input-bordered w-full bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-teal-500 text-gray-800") }}
+                </div>
+
+                <div class="form-control w-full mb-6">
+                    <label class="label"><span class="label-text text-gray-700">{{ form.password.label }}</span></label>
+                    {{ form.password(class="input input-bordered w-full bg-gray-50 border-gray-300 focus:border-teal-500 focus:ring-teal-500 text-gray-800") }}
+                </div>
+
+                {{ form.submit(class="btn border-none bg-teal-500 hover:bg-teal-600 text-white w-full font-bold") }}
+            </form>
+            <p class="mt-4 text-sm text-gray-600">มีบัญชีอยู่แล้ว? <a href="/login" class="text-teal-600 hover:underline">เข้าสู่ระบบ</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
