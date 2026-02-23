@@ -1,13 +1,18 @@
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin  # เพิ่มบรรทัดนี้
 from datetime import datetime
 
 db = SQLAlchemy()
 
-# 1. ตารางผู้ใช้งาน
-class User(db.Model):
+# ใส่ UserMixin เข้าไปในวงเล็บด้วย
+class User(UserMixin, db.Model): 
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    
+    posts = db.relationship('Fanboard', backref='author', lazy=True)
+
+# (ส่วนคลาส Song และ Fanboard ปล่อยไว้เหมือนเดิมได้เลยครับ)
 
 # 2. ตารางคลังเพลง
 class Song(db.Model):

@@ -13,11 +13,17 @@
             <a href="/" class="btn btn-ghost text-xl text-white">🎵 Miku Sekai</a>
         </div>
         <div class="flex-none">
-            <ul class="menu menu-horizontal px-1 text-white">
+            <ul class="menu menu-horizontal px-1 text-white items-center">
                 <li><a href="/">หน้าแรก</a></li>
                 <li><a href="#">คลังเพลง</a></li>
                 <li><a href="#">เว็บบอร์ด</a></li>
-                <li><a href="/login" class="btn btn-outline border-white text-white hover:bg-white hover:text-teal-500 ml-2">เข้าสู่ระบบ</a></li>
+    
+                {% if current_user.is_authenticated %}
+                    <li><span class="text-teal-200">ยินดีต้อนรับ, {{ current_user.username }}</span></li>
+                    <li><a href="/logout" class="btn btn-outline border-white text-white hover:bg-red-500 hover:border-red-500 hover:text-white ml-2">ออกจากระบบ</a></li>
+                {% else %}
+                    <li><a href="/login" class="btn btn-outline border-white text-white hover:bg-white hover:text-teal-500 ml-2">เข้าสู่ระบบ</a></li>
+                {% endif %}
             </ul>
         </div>
     </div>
