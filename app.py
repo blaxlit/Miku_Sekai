@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
-from models import db, User
-from forms import RegisterForm, LoginForm
+from models import db, User, Song
+from forms import RegisterForm, LoginForm, AddSongForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user # นำเข้าเครื่องมือ Login
 from dotenv import load_dotenv
@@ -60,6 +60,28 @@ def login():
 def logout():
     logout_user() # สั่งล้างข้อมูลล็อกอิน
     return redirect(url_for('index'))
+
+# หน้าคลังเพลง (แสดงเพลงทั้งหมด)
+@app.route('/songs')
+def songs():
+    all_songs = Song.query.order_by(Song.date_added.desc()).all()
+    return render_template('songs.html', songs=all_songs)
+
+# หน้าเพิ่มเพลง (ต้องล็อกอินก่อนถึงจะเข้าได้)
+@app.route('/songs/add', methods=['GET', 'POST'])
+@login_required
+def add_song():
+    form = AddSongForm()
+    if form.validate_on_submit():
+        new_song = Song(
+            title=form.title.data,
+            producer=form.producer.data,
+            youtube_url=form.youtube_url.data
+        )
+        db.session.add(new_song)
+        db.session.commit()
+        return redirect(url_for('songs'))
+    return render_template('add_song.html', form=form)
 
 if __name__ == '__main__':
     app.run(debug=True)
