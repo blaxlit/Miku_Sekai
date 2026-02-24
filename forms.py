@@ -16,4 +16,4 @@ class AddSongForm(FlaskForm):
     title = StringField('ชื่อเพลง', validators=[DataRequired(), Length(max=100)])
     producer = StringField('โปรดิวเซอร์ (Vocaloid P)', validators=[DataRequired(), Length(max=100)])
     youtube_url = StringField('ลิงก์ YouTube (ถ้ามี)', validators=[Optional(), URL()])
-    submit = SubmitField('เพิ่มเพลงลงคลัง')
+    submit = SubmitField('เพิ่มเพลงลงคลัง') 
