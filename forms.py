@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, URL, Optional
 
 class RegisterForm(FlaskForm):
@@ -17,3 +17,7 @@ class AddSongForm(FlaskForm):
     producer = StringField('โปรดิวเซอร์ (Vocaloid P)', validators=[DataRequired(), Length(max=100)])
     youtube_url = StringField('ลิงก์ YouTube (ถ้ามี)', validators=[Optional(), URL()])
     submit = SubmitField('เพิ่มเพลงลงคลัง')
+
+class FanboardForm(FlaskForm):
+    message = TextAreaField('ข้อความของคุณ', validators=[DataRequired(), Length(max=500)])
+    submit = SubmitField('โพสต์ข้อความ')
