@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request
-from models import db, User, Song
-from forms import RegisterForm, LoginForm, AddSongForm
+from models import db, User, Song, Fanboard
+from forms import RegisterForm, LoginForm, AddSongForm, FanboardForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user # นำเข้าเครื่องมือ Login
 from dotenv import load_dotenv
@@ -82,6 +82,21 @@ def add_song():
         db.session.commit()
         return redirect(url_for('songs'))
     return render_template('add_song.html', form=form)
+
+# หน้าเว็บบอร์ด
+@app.route('/board', methods=['GET', 'POST'])
+def board():
+    form = FanboardForm()
+    # ถ้ามีการกดปุ่มโพสต์ และผู้ใช้ล็อกอินอยู่
+    if form.validate_on_submit() and current_user.is_authenticated:
+        new_post = Fanboard(message=form.message.data, user_id=current_user.id)
+        db.session.add(new_post)
+        db.session.commit()
+        return redirect(url_for('board')) # โพสต์เสร็จให้รีเฟรชหน้าเดิม
+
+    # ดึงข้อความทั้งหมดจากฐานข้อมูล เรียงจากใหม่ไปเก่า
+    posts = Fanboard.query.order_by(Fanboard.date_posted.desc()).all()
+    return render_template('board.html', form=form, posts=posts)
 
 if __name__ == '__main__':
     app.run(debug=True)
