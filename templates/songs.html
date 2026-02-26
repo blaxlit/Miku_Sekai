@@ -16,7 +16,17 @@
             {% if song.youtube_url %}
             <div class="card-actions justify-end mt-4">
                 <a href="/song/{{ song.id }}" class="btn btn-sm bg-teal-50 text-teal-600 hover:bg-teal-100 border-none">ดูรายละเอียด</a>
+                {% if song.youtube_url %}
                 <a href="{{ song.youtube_url }}" target="_blank" class="btn btn-sm btn-outline text-teal-600 border-teal-600 hover:bg-teal-600 hover:border-teal-600 hover:text-white">YouTube</a>
+                {% endif %}
+            </div>
+
+            {% if current_user.is_authenticated and current_user.role == 'admin' %}
+            <div class="card-actions justify-end mt-2 pt-2 border-t border-gray-100">
+                <a href="/songs/edit/{{ song.id }}" class="btn btn-xs btn-warning">แก้ไข</a>
+                <form action="/songs/delete/{{ song.id }}" method="POST" class="inline">
+                    <button type="submit" class="btn btn-xs btn-error text-white" onclick="return confirm('แน่ใจหรือไม่ว่าต้องการลบเพลงนี้?');">ลบ</button>
+                </form>
             </div>
             {% endif %}
         </div>
