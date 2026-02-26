@@ -19,7 +19,7 @@
                 <li><a href="/board">เว็บบอร์ด</a></li>
     
                 {% if current_user.is_authenticated %}
-                    <li><span class="text-teal-200">ยินดีต้อนรับ, {{ current_user.username }}</span></li>
+                    <li><a href="/profile" class="text-teal-200 hover:text-white font-bold">👤 {{ current_user.username }}</a></li>
                     <li><a href="/logout" class="btn btn-outline border-white text-white hover:bg-red-500 hover:border-red-500 hover:text-white ml-2">ออกจากระบบ</a></li>
                 {% else %}
                     <li><a href="/login" class="btn btn-outline border-white text-white hover:bg-white hover:text-teal-500 ml-2">เข้าสู่ระบบ</a></li>
