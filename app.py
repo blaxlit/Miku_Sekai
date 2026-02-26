@@ -1,8 +1,8 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, abort # ⭐️ เพิ่ม abort ตรงนี้
 from models import db, User, Song, Fanboard
 from forms import RegisterForm, LoginForm, AddSongForm, FanboardForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user # นำเข้าเครื่องมือ Login
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from dotenv import load_dotenv
 from acl import roles_required
 import os
@@ -51,24 +51,22 @@ def login():
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and check_password_hash(user.password, form.password.data):
-            login_user(user) # สั่งให้ระบบจำว่าล็อกอินแล้ว
+            login_user(user)
             return redirect(url_for('index'))
     return render_template('login.html', form=form)
 
-# เพิ่ม Route ออกจากระบบ
 @app.route('/logout')
 @login_required
 def logout():
-    logout_user() # สั่งล้างข้อมูลล็อกอิน
+    logout_user()
     return redirect(url_for('index'))
 
-# หน้าคลังเพลง (แสดงเพลงทั้งหมด)
 @app.route('/songs')
 def songs():
     all_songs = Song.query.order_by(Song.date_added.desc()).all()
     return render_template('songs.html', songs=all_songs)
 
-# หน้าเพิ่มเพลง (ต้องล็อกอินก่อนถึงจะเข้าได้)
+# ⭐️ อัปเดต: บันทึก user_id ของคนเพิ่มเพลง
 @app.route('/songs/add', methods=['GET', 'POST'])
 @login_required
 def add_song():
@@ -77,84 +75,8 @@ def add_song():
         new_song = Song(
             title=form.title.data,
             producer=form.producer.data,
-            youtube_url=form.youtube_url.data
+            youtube_url=form.youtube_url.data,
+            user_id=current_user.id  # ⭐️ สั่งให้บันทึก ID ของคนเพิ่มเพลง
         )
         db.session.add(new_song)
         db.session.commit()
-        return redirect(url_for('songs'))
-    return render_template('add_song.html', form=form)
-
-# หน้าเว็บบอร์ด
-@app.route('/board', methods=['GET', 'POST'])
-def board():
-    form = FanboardForm()
-    # ถ้ามีการกดปุ่มโพสต์ และผู้ใช้ล็อกอินอยู่
-    if form.validate_on_submit() and current_user.is_authenticated:
-        new_post = Fanboard(message=form.message.data, user_id=current_user.id)
-        db.session.add(new_post)
-        db.session.commit()
-        return redirect(url_for('board')) # โพสต์เสร็จให้รีเฟรชหน้าเดิม
-
-    # ดึงข้อความทั้งหมดจากฐานข้อมูล เรียงจากใหม่ไปเก่า
-    posts = Fanboard.query.order_by(Fanboard.date_posted.desc()).all()
-    return render_template('board.html', form=form, posts=posts)
-
-# หน้าโปรไฟล์ส่วนตัว
-@app.route('/profile')
-@login_required
-def profile():
-    # ดึงเฉพาะโพสต์เว็บบอร์ดที่ User คนนี้เป็นคนเขียน
-    user_posts = Fanboard.query.filter_by(user_id=current_user.id).order_by(Fanboard.date_posted.desc()).all()
-    return render_template('profile.html', posts=user_posts)
-
-# หน้ารายละเอียดเพลง (รับค่า id ของเพลงมาด้วย)
-@app.route('/song/<int:song_id>')
-def song_detail(song_id):
-    song = Song.query.get_or_404(song_id) # หาเพลงจาก ID ถ้าไม่เจอจะขึ้น 404
-    
-    # แปลงลิงก์ YouTube ปกติ ให้กลายเป็นลิงก์แบบฝัง (Embed) เพื่อให้เล่นวิดีโอบนเว็บเราได้เลย
-    embed_url = None
-    if song.youtube_url:
-        if 'watch?v=' in song.youtube_url:
-            video_id = song.youtube_url.split('watch?v=')[-1].split('&')[0]
-            embed_url = f"https://www.youtube.com/embed/{video_id}"
-        elif 'youtu.be/' in song.youtube_url:
-            video_id = song.youtube_url.split('youtu.be/')[-1].split('?')[0]
-            embed_url = f"https://www.youtube.com/embed/{video_id}"
-
-    return render_template('song_detail.html', song=song, embed_url=embed_url)
-
-# หน้าแก้ไขเพลง (เฉพาะ Admin)
-@app.route('/songs/edit/<int:song_id>', methods=['GET', 'POST'])
-@login_required
-@roles_required('admin')
-def edit_song(song_id):
-    song = Song.query.get_or_404(song_id)
-    form = AddSongForm(obj=song) # แอบใช้ฟอร์ม AddSongForm ตัวเดิมได้เลย ประหยัดเวลา!
-
-    if request.method == 'GET':
-        form.title.data = song.title
-        form.producer.data = song.producer
-        form.youtube_url.data = song.youtube_url
-
-    if form.validate_on_submit():
-        song.title = form.title.data
-        song.producer = form.producer.data
-        song.youtube_url = form.youtube_url.data
-        db.session.commit()
-        return redirect(url_for('songs'))
-
-    return render_template('edit_song.html', form=form, song=song)
-
-# ระบบลบเพลง (เฉพาะ Admin)
-@app.route('/songs/delete/<int:song_id>', methods=['POST'])
-@login_required
-@roles_required('admin')
-def delete_song(song_id):
-    song = Song.query.get_or_404(song_id)
-    db.session.delete(song)
-    db.session.commit()
-    return redirect(url_for('songs'))
-
-if __name__ == '__main__':
-    app.run(debug=True)
