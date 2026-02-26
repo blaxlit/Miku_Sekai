@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex justify-center items-center mt-10">
+    <div class="card w-full max-w-lg bg-white shadow-xl rounded-box border-t-4 border-yellow-400">
+        <div class="card-body">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4 text-center">✏️ แก้ไขข้อมูลเพลง</h2>
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                <div class="form-control w-full mb-4">
+                    <label class="label"><span class="label-text text-gray-700">{{ form.title.label }}</span></label>
+                    {{ form.title(class="input input-bordered w-full bg-gray-50 text-gray-800") }}
+                </div>
+                <div class="form-control w-full mb-4">
+                    <label class="label"><span class="label-text text-gray-700">{{ form.producer.label }}</span></label>
+                    {{ form.producer(class="input input-bordered w-full bg-gray-50 text-gray-800") }}
+                </div>
+                <div class="form-control w-full mb-6">
+                    <label class="label"><span class="label-text text-gray-700">{{ form.youtube_url.label }}</span></label>
+                    {{ form.youtube_url(class="input input-bordered w-full bg-gray-50 text-gray-800") }}
+                </div>
+                <div class="flex gap-2">
+                    <a href="/songs" class="btn btn-outline flex-1">ยกเลิก</a>
+                    {{ form.submit(class="btn border-none bg-yellow-400 hover:bg-yellow-500 text-gray-900 flex-1 font-bold", value="บันทึกการแก้ไข") }}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

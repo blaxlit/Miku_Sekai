@@ -4,6 +4,7 @@ from forms import RegisterForm, LoginForm, AddSongForm, FanboardForm
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user # นำเข้าเครื่องมือ Login
 from dotenv import load_dotenv
+from acl import roles_required
 import os
 
 load_dotenv()
@@ -122,6 +123,38 @@ def song_detail(song_id):
             embed_url = f"https://www.youtube.com/embed/{video_id}"
 
     return render_template('song_detail.html', song=song, embed_url=embed_url)
+
+# หน้าแก้ไขเพลง (เฉพาะ Admin)
+@app.route('/songs/edit/<int:song_id>', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin')
+def edit_song(song_id):
+    song = Song.query.get_or_404(song_id)
+    form = AddSongForm(obj=song) # แอบใช้ฟอร์ม AddSongForm ตัวเดิมได้เลย ประหยัดเวลา!
+
+    if request.method == 'GET':
+        form.title.data = song.title
+        form.producer.data = song.producer
+        form.youtube_url.data = song.youtube_url
+
+    if form.validate_on_submit():
+        song.title = form.title.data
+        song.producer = form.producer.data
+        song.youtube_url = form.youtube_url.data
+        db.session.commit()
+        return redirect(url_for('songs'))
+
+    return render_template('edit_song.html', form=form, song=song)
+
+# ระบบลบเพลง (เฉพาะ Admin)
+@app.route('/songs/delete/<int:song_id>', methods=['POST'])
+@login_required
+@roles_required('admin')
+def delete_song(song_id):
+    song = Song.query.get_or_404(song_id)
+    db.session.delete(song)
+    db.session.commit()
+    return redirect(url_for('songs'))
 
 if __name__ == '__main__':
     app.run(debug=True)
