@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto mt-6">
+    <div class="card bg-white shadow-lg rounded-box mb-8">
+        <div class="card-body items-center text-center p-10">
+            <div class="avatar placeholder mb-4">
+                <div class="bg-teal-500 text-white rounded-full w-24 ring ring-teal-300 ring-offset-base-100 ring-offset-2">
+                    <span class="text-4xl">{{ current_user.username[0] | upper }}</span>
+                </div>
+            </div>
+            <h2 class="text-3xl font-bold text-gray-800">{{ current_user.username }}</h2>
+            <p class="text-gray-500 mt-2">สมาชิก Miku Sekai 🎵</p>
+        </div>
+    </div>
+
+    <h3 class="text-2xl font-bold text-teal-600 mb-4">ประวัติการโพสต์เว็บบอร์ดของคุณ</h3>
+    <div class="space-y-4">
+        {% for post in posts %}
+        <div class="card bg-white shadow-sm rounded-box border border-gray-100">
+            <div class="card-body p-5">
+                <p class="text-xs text-gray-400 mb-2">{{ post.date_posted.strftime('%Y-%m-%d %H:%M') }}</p>
+                <p class="text-gray-700 whitespace-pre-line">{{ post.message }}</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-10 text-gray-500 bg-white rounded-box shadow-sm">
+            คุณยังไม่เคยโพสต์ข้อความใดๆ เลย <a href="/board" class="text-teal-500 hover:underline">ไปที่เว็บบอร์ด</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
