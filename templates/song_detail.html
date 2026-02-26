@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-4xl mx-auto mt-6">
+    <div class="mb-4">
+        <a href="/songs" class="btn btn-sm btn-ghost text-teal-600 hover:bg-teal-50">← กลับไปคลังเพลง</a>
+    </div>
+
+    <div class="card bg-white shadow-xl rounded-box overflow-hidden">
+        {% if embed_url %}
+        <div class="aspect-video w-full bg-black">
+            <iframe class="w-full h-full" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        {% else %}
+        <div class="aspect-video w-full bg-gray-200 flex items-center justify-center">
+            <span class="text-gray-500">ไม่มีวิดีโอ YouTube สำหรับเพลงนี้</span>
+        </div>
+        {% endif %}
+
+        <div class="card-body">
+            <h1 class="text-4xl font-bold text-teal-600 mb-2">{{ song.title }}</h1>
+            <p class="text-lg text-gray-600 mb-4">โปรดิวเซอร์: <span class="font-semibold text-gray-800">{{ song.producer }}</span></p>
+            <p class="text-sm text-gray-400">เพิ่มเข้าสู่ระบบเมื่อ: {{ song.date_posted }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
