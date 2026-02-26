@@ -98,5 +98,30 @@ def board():
     posts = Fanboard.query.order_by(Fanboard.date_posted.desc()).all()
     return render_template('board.html', form=form, posts=posts)
 
+# หน้าโปรไฟล์ส่วนตัว
+@app.route('/profile')
+@login_required
+def profile():
+    # ดึงเฉพาะโพสต์เว็บบอร์ดที่ User คนนี้เป็นคนเขียน
+    user_posts = Fanboard.query.filter_by(user_id=current_user.id).order_by(Fanboard.date_posted.desc()).all()
+    return render_template('profile.html', posts=user_posts)
+
+# หน้ารายละเอียดเพลง (รับค่า id ของเพลงมาด้วย)
+@app.route('/song/<int:song_id>')
+def song_detail(song_id):
+    song = Song.query.get_or_404(song_id) # หาเพลงจาก ID ถ้าไม่เจอจะขึ้น 404
+    
+    # แปลงลิงก์ YouTube ปกติ ให้กลายเป็นลิงก์แบบฝัง (Embed) เพื่อให้เล่นวิดีโอบนเว็บเราได้เลย
+    embed_url = None
+    if song.youtube_url:
+        if 'watch?v=' in song.youtube_url:
+            video_id = song.youtube_url.split('watch?v=')[-1].split('&')[0]
+            embed_url = f"https://www.youtube.com/embed/{video_id}"
+        elif 'youtu.be/' in song.youtube_url:
+            video_id = song.youtube_url.split('youtu.be/')[-1].split('?')[0]
+            embed_url = f"https://www.youtube.com/embed/{video_id}"
+
+    return render_template('song_detail.html', song=song, embed_url=embed_url)
+
 if __name__ == '__main__':
     app.run(debug=True)
