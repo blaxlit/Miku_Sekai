@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="max-w-4xl mx-auto mt-6">
-    <h1 class="text-3xl font-bold text-teal-600 mb-6 text-center">เว็บบอร์ด Miku Sekai 💬</h1>
+    <h1 class="text-3xl font-bold text-teal-600 mb-6 text-center text-shadow-sm">เว็บบอร์ด Miku Sekai 💬</h1>
 
     {% if current_user.is_authenticated %}
-    <div class="card bg-white shadow-lg rounded-box mb-8">
+    <div class="card bg-white shadow-lg rounded-box mb-8 border-t-4 border-teal-500">
         <div class="card-body p-6">
             <form method="POST" action="">
                 {{ form.hidden_tag() }}
@@ -12,7 +12,7 @@
                     {{ form.message(class="textarea textarea-bordered h-24 bg-gray-50 text-gray-800 focus:border-teal-500", placeholder="พิมพ์ข้อความที่นี่เพื่อพูดคุยกับทุกคน...") }}
                 </div>
                 <div class="flex justify-end">
-                    {{ form.submit(class="btn border-none bg-teal-500 hover:bg-teal-600 text-white font-bold px-8") }}
+                    {{ form.submit(class="btn border-none bg-teal-500 hover:bg-teal-600 text-white font-bold px-8 shadow-md") }}
                 </div>
             </form>
         </div>
@@ -27,25 +27,41 @@
 
     <div class="space-y-4">
         {% for post in posts %}
-        <div class="card bg-white shadow-sm rounded-box border border-gray-100">
+        <div class="card bg-white shadow-sm rounded-box border border-gray-100 hover:border-teal-200 transition-colors">
             <div class="card-body p-5">
-                <div class="flex items-center gap-3 mb-2">
-                    <div class="avatar placeholder">
-                        <div class="bg-teal-500 text-white rounded-full w-10">
-                            <span class="text-lg">{{ post.author.username[0] | upper }}</span>
+                <div class="flex justify-between items-start">
+                    <div class="flex items-center gap-3 mb-2">
+                        <div class="avatar placeholder">
+                            <div class="bg-teal-500 text-white rounded-full w-10">
+                                <span class="text-lg">{{ post.author.username[0] | upper }}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">{{ post.author.username }}</h3>
+                            <p class="text-xs text-gray-400">{{ post.date_posted.strftime('%Y-%m-%d %H:%M') }}</p>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">{{ post.author.username }}</h3>
-                        <p class="text-xs text-gray-400">{{ post.date_posted.strftime('%Y-%m-%d %H:%M') }}</p>
+
+                    {% if current_user.is_authenticated and (current_user.id == post.user_id or current_user.role == 'admin') %}
+                    <div class="dropdown dropdown-end">
+                        <label tabindex="0" class="btn btn-ghost btn-xs text-gray-400 hover:text-error">ลบ</label>
+                        <ul tabindex="0" class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32 border border-gray-100">
+                            <li>
+                                <form action="/board/delete/{{ post.id }}" method="POST" class="p-0">
+                                    <button type="submit" class="text-error w-full text-left py-2 px-4 hover:bg-red-50" onclick="return confirm('คุณต้องการลบโพสต์นี้ใช่หรือไม่?');">ยืนยันการลบ</button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
+                    {% endif %}
                 </div>
-                <p class="text-gray-700 mt-2 whitespace-pre-line">{{ post.message }}</p>
+                
+                <p class="text-gray-700 mt-2 whitespace-pre-line leading-relaxed">{{ post.message }}</p>
             </div>
         </div>
         {% else %}
-        <div class="text-center py-10 text-gray-500">
-            ยังไม่มีข้อความในเว็บบอร์ด เป็นคนแรกที่เริ่มบทสนทนาสิ!
+        <div class="text-center py-20 bg-gray-50 rounded-box border-2 border-dashed border-gray-200">
+            <p class="text-gray-400 text-lg">ยังไม่มีข้อความในเว็บบอร์ด เป็นคนแรกที่เริ่มบทสนทนาสิ! ✨</p>
         </div>
         {% endfor %}
     </div>

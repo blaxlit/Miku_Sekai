@@ -128,15 +128,29 @@ def edit_song(song_id):
         return redirect(url_for('songs'))
     return render_template('edit_song.html', form=form, song=song)
 
+# --- ระบบลบเพลง ---
 @app.route('/songs/delete/<int:song_id>', methods=['POST'])
 @login_required
 def delete_song(song_id):
     song = Song.query.get_or_404(song_id)
+    # เช็คสิทธิ์: เป็นเจ้าของเพลง หรือ เป็น Admin
     if current_user.id != song.user_id and current_user.role != 'admin':
         return abort(403)
     db.session.delete(song)
     db.session.commit()
     return redirect(url_for('songs'))
+
+# --- ระบบลบโพสต์เว็บบอร์ด ---
+@app.route('/board/delete/<int:post_id>', methods=['POST'])
+@login_required
+def delete_post(post_id):
+    post = Fanboard.query.get_or_404(post_id)
+    # เช็คสิทธิ์: เป็นเจ้าของโพสต์ หรือ เป็น Admin
+    if current_user.id != post.user_id and current_user.role != 'admin':
+        return abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect(url_for('board'))
 
 if __name__ == '__main__':
     app.run(debug=True)
