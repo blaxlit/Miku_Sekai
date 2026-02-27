@@ -168,5 +168,32 @@ def edit_post(post_id):
     
     return render_template('edit_post.html', form=form, post=post)
 
+# ==========================================
+# ระบบ Admin Dashboard (จัดการสมาชิก)
+# ==========================================
+@app.route('/admin/users', methods=['GET', 'POST'])
+@login_required
+def admin_users():
+    # 1. ยามเฝ้าประตู: ถ้าไม่ใช่ admin ให้เตะออก (Error 403)
+    if current_user.role != 'admin':
+        return abort(403)
+    
+    # 2. ระบบเปลี่ยนยศ (เมื่อกดปุ่มบันทึก)
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        new_role = request.form.get('new_role')
+        user = User.query.get(user_id)
+        
+        # ป้องกันไม่ให้ Admin เผลอเปลี่ยนยศตัวเอง (เดี๋ยวเว็บไม่มีคนคุม 555)
+        if user and user.id != current_user.id:
+            user.role = new_role
+            db.session.commit()
+            
+        return redirect(url_for('admin_users'))
+        
+    # 3. ดึงข้อมูล User ทั้งหมดมาแสดง
+    users = User.query.all()
+    return render_template('admin_users.html', users=users)
+
 if __name__ == '__main__':
     app.run(debug=True)

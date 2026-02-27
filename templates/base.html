@@ -10,19 +10,28 @@
 
     <div class="navbar bg-teal-500 text-primary-content shadow-lg">
         <div class="flex-1">
-            <a href="/" class="btn btn-ghost text-xl text-white">🎵 Miku Sekai</a>
+            <a href="/" class="btn btn-ghost text-xl text-white font-bold">🎵 Miku Sekai</a>
         </div>
         <div class="flex-none">
-            <ul class="menu menu-horizontal px-1 text-white items-center">
-                <li><a href="/">หน้าแรก</a></li>
-                <li><a href="/songs">คลังเพลง</a></li>
-                <li><a href="/board">เว็บบอร์ด</a></li>
+            <ul class="menu menu-horizontal px-1 text-white items-center gap-1">
+                <li><a href="/" class="hover:bg-teal-600 rounded-lg">หน้าแรก</a></li>
+                <li><a href="/songs" class="hover:bg-teal-600 rounded-lg">คลังเพลง</a></li>
+                <li><a href="/board" class="hover:bg-teal-600 rounded-lg">เว็บบอร์ด</a></li>
     
                 {% if current_user.is_authenticated %}
-                    <li><a href="/profile" class="text-teal-200 hover:text-white font-bold">🌠 {{ current_user.username }}</a></li>
-                    <li><a href="/logout" class="btn btn-outline border-white text-white hover:bg-red-500 hover:border-red-500 hover:text-white ml-2">ออกจากระบบ</a></li>
+                    
+                    {% if current_user.role == 'admin' %}
+                        <li>
+                            <a href="/admin/users" class="text-yellow-300 font-bold hover:text-yellow-100 hover:bg-teal-600 rounded-lg">
+                                ⚙️ จัดการระบบ
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li><a href="/profile" class="text-teal-100 hover:text-white font-bold hover:bg-teal-600 rounded-lg">🌠 {{ current_user.username }}</a></li>
+                    <li><a href="/logout" class="btn btn-sm btn-outline border-white text-white hover:bg-red-500 hover:border-red-500 hover:text-white ml-2">ออกจากระบบ</a></li>
                 {% else %}
-                    <li><a href="/login" class="btn btn-outline border-white text-white hover:bg-white hover:text-teal-500 ml-2">เข้าสู่ระบบ</a></li>
+                    <li><a href="/login" class="btn btn-sm btn-outline border-white text-white hover:bg-white hover:text-teal-500 ml-2">เข้าสู่ระบบ</a></li>
                 {% endif %}
             </ul>
         </div>

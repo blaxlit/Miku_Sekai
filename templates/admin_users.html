@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="max-w-5xl mx-auto mt-10">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">⚙️ ระบบจัดการสมาชิก (Admin)</h1>
+    </div>
+
+    <div class="bg-white rounded-box shadow-md overflow-hidden border border-gray-100">
+        <table class="table w-full">
+            <thead class="bg-gray-50 text-gray-700 text-sm">
+                <tr>
+                    <th>ID</th>
+                    <th>ชื่อผู้ใช้ (Username)</th>
+                    <th>บทบาท (Role)</th>
+                    <th>จัดการสิทธิ์</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                <tr class="hover">
+                    <td class="font-bold">{{ user.id }}</td>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        {% if user.role == 'admin' %}
+                            <span class="badge badge-error">Admin</span>
+                        {% else %}
+                            <span class="badge badge-primary">User</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if user.id != current_user.id %}
+                        <form method="POST" action="/admin/users" class="flex gap-2 items-center m-0">
+                            <input type="hidden" name="user_id" value="{{ user.id }}">
+                            <select name="new_role" class="select select-bordered select-sm">
+                                <option value="user" {% if user.role == 'user' %}selected{% endif %}>User ธรรมดา</option>
+                                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin (ผู้ดูแล)</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-warning">อัปเดต</button>
+                        </form>
+                        {% else %}
+                            <span class="text-gray-400 text-sm italic">บัญชีของคุณ</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
