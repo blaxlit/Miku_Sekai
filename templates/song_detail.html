@@ -19,6 +19,9 @@
         <div class="card-body">
             <h1 class="text-4xl font-bold text-teal-600 mb-2">{{ song.title }}</h1>
             <p class="text-lg text-gray-600 mb-4">โปรดิวเซอร์: <span class="font-semibold text-gray-800">{{ song.producer }}</span></p>
+            <p class="text-md text-gray-500 mb-2">
+    💫 อัปโหลดโดย: <span class="font-bold text-teal-600">{{ song.uploader.username }}</span>
+</p>
             <p class="text-sm text-gray-400">เพิ่มเข้าสู่ระบบเมื่อ: <span class="text-gray-500 font-medium">{{ song.date_added.strftime('%d/%m/%Y') }}</span></p>
         </div>
     </div>
