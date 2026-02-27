@@ -152,5 +152,21 @@ def delete_post(post_id):
     db.session.commit()
     return redirect(url_for('board'))
 
+@app.route('/board/edit/<int:post_id>', methods=['GET', 'POST'])
+@login_required
+def edit_post(post_id):
+    post = Fanboard.query.get_or_404(post_id)
+    # เช็คสิทธิ์: ต้องเป็นเจ้าของ หรือ แอดมิน
+    if current_user.id != post.user_id and current_user.role != 'admin':
+        return abort(403)
+        
+    form = FanboardForm(obj=post)
+    if form.validate_on_submit():
+        post.message = form.message.data
+        db.session.commit()
+        return redirect(url_for('board'))
+    
+    return render_template('edit_post.html', form=form, post=post)
+
 if __name__ == '__main__':
     app.run(debug=True)

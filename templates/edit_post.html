@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="flex justify-center items-center mt-10">
+    <div class="card w-full max-w-2xl bg-white shadow-xl rounded-box border-t-4 border-teal-500">
+        <div class="card-body p-8">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2 text-center">📝 แก้ไขข้อความของคุณ</h2>
+            <p class="text-gray-500 text-center mb-6 text-sm">คุณสามารถปรับเปลี่ยนเนื้อหาที่โพสต์ไว้ได้ที่นี่</p>
+            
+            <form method="POST" action="">
+                {{ form.hidden_tag() }}
+                
+                <div class="form-control w-full mb-6">
+                    <label class="label">
+                        <span class="label-text font-bold text-gray-700">ข้อความเดิมของคุณ:</span>
+                    </label>
+                    {{ form.message(class="textarea textarea-bordered h-48 bg-gray-50 text-gray-800 focus:border-teal-500 text-lg leading-relaxed", placeholder="เขียนข้อความใหม่ที่นี่...") }}
+                </div>
+
+                <div class="flex gap-4">
+                    <a href="/board" class="btn btn-outline flex-1 border-gray-300">
+                        ยกเลิก
+                    </a>
+                    <button type="submit" class="btn border-none bg-teal-500 hover:bg-teal-600 text-white flex-2 px-10 font-bold shadow-md">
+                        บันทึกการแก้ไข
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
