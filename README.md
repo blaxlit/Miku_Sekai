@@ -1,8 +1,7 @@
 # 🎵 Miku Sekai (ミク世界)
 "Connecting the world through sound and the future."
 
-# Developer
-Thaweerat Yordsathien 6810110594
+# Developer: Thaweerat Yordsathien 6810110594
 
 ![Miku Sekai Project](https://img.shields.io/badge/Status-Completed-success)
 ![Tech Stack](https://img.shields.io/badge/Tech-Python_|_Flask_|_SQLite-blue)
