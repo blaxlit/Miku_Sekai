@@ -1,6 +1,5 @@
-# Miku Sekai
-Vocaloid Fan Community & Song Database
 # 🎵 Miku Sekai (ミク世界)
+"Connecting the world through sound and the future."
 
 ![Miku Sekai Project](https://img.shields.io/badge/Status-Completed-success)
 ![Tech Stack](https://img.shields.io/badge/Tech-Python_|_Flask_|_SQLite-blue)
@@ -43,3 +42,7 @@ Vocaloid Fan Community & Song Database
 3. รันคำสั่งสร้างฐานข้อมูลสำหรับแอดมิน (ทำครั้งแรกครั้งเดียว):
    ```bash
    python create_admin.py
+4. รันเซิร์ฟเวอร์หลักของแอปพลิเคชัน:
+   ```bash
+   python app.py
+5. เปิด Web Browser และเข้าไปที่ http://127.0.0.1:5000
