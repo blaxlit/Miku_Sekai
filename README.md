@@ -1,2 +1,50 @@
-# Miku Sekai
-Vocaloid Fan Community & Song Database
+# 🎵 Miku Sekai (ミク世界)
+"Connecting the world through sound and the future."
+
+![Miku Sekai Project](https://img.shields.io/badge/Status-Completed-success)
+![Tech Stack](https://img.shields.io/badge/Tech-Python_|_Flask_|_SQLite-blue)
+![UI](https://img.shields.io/badge/UI-Tailwind_|_DaisyUI-teal)
+
+# Developer: Thaweerat Yordsathien 6810110594
+
+**Miku Sekai** คือโปรเจกต์ Web Application ที่สร้างขึ้นมาเพื่อเป็นพื้นที่เล็กๆ สำหรับแฟนคลับ Hatsune Miku และ Vocaloid โดยเฉพาะ ผู้ใช้สามารถเข้ามาค้นหาคลังเพลง, เพิ่มเพลงโปรด, และพูดคุยแลกเปลี่ยนความรู้สึกกันในเว็บบอร์ดได้ 
+
+โปรเจกต์นี้ถูกพัฒนาขึ้นภายในเวลา **10 วัน (10 Days Challenge)** เพื่อฝึกฝนทักษะการทำ Full-Stack Web Development ตั้งแต่การออกแบบ UI ไปจนถึงการจัดการระบบ Database หลังบ้าน
+
+---
+
+## ✨ Features (ฟีเจอร์เด่น)
+
+* **🔐 ระบบ Authentication:** สมัครสมาชิก, เข้าสู่ระบบ, และการแบ่งสิทธิ์ผู้ใช้งาน (User / Admin)
+* **🎶 Miku Song Library (คลังเพลง):**
+  * ดูรายชื่อเพลงฮิตของ Miku พร้อมข้อมูลโปรดิวเซอร์
+  * สมาชิกสามารถ "เพิ่มเพลงใหม่" พร้อมแนบลิงก์ YouTube ได้
+  * หน้าแสดงรายละเอียดเพลงที่สามารถกดดูคลิปวิดีโอได้ทันที
+* **💬 Fanboard (เว็บบอร์ด):**
+  * พื้นที่พูดคุยแบบ Real-time (โพสต์, แก้ไข, ลบข้อความของตัวเองได้)
+* **👤 User Profile:** หน้าโปรไฟล์ส่วนตัวที่สรุป "เพลงที่ฉันเพิ่ม" และ "โพสต์ของฉัน"
+* **⚙️ Admin Dashboard:** ห้องควบคุมลับสำหรับแอดมิน เพื่อจัดการสิทธิ์สมาชิก (เลื่อนขั้น/ลดขั้น)
+* **📱 Responsive Design:** หน้าจอออกแบบด้วย Tailwind CSS และ DaisyUI สวยงามและรองรับการใช้งานทุกขนาดหน้าจอ
+
+---
+
+## 🛠️ Tech Stack (เทคโนโลยีที่ใช้)
+
+* **Backend:** Python 3, Flask (Web Framework)
+* **Database:** SQLite, Flask-SQLAlchemy
+* **Frontend:** HTML5, Tailwind CSS (via CDN), DaisyUI
+* **Authentication:** Flask-Login, Flask-Bcrypt, Flask-WTF
+
+---
+
+## 🚀 How to Run (วิธีรันโปรเจกต์)
+
+1. Clone โปรเจกต์นี้ลงในเครื่องของคุณ
+2. แนะนำให้สร้าง Virtual Environment และติดตั้ง Requirements (ถ้ามี)
+3. รันคำสั่งสร้างฐานข้อมูลสำหรับแอดมิน (ทำครั้งแรกครั้งเดียว):
+   ```bash
+   python create_admin.py
+4. รันเซิร์ฟเวอร์หลักของแอปพลิเคชัน:
+   ```bash
+   python app.py
+5. เปิด Web Browser และเข้าไปที่ http://127.0.0.1:5000
